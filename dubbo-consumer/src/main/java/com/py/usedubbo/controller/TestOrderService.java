@@ -19,26 +19,22 @@ import java.util.concurrent.Future;
 @RestController
 public class TestOrderService {
 
-    @Reference(async = true, timeout = 3000)
+//    @Reference(async = true, timeout = 3000)
+//    private OrderService orderService;
+
+    @Reference(timeout = 5000)
     private OrderService orderService;
 
+    /**
+     * 同步调用、同步返回
+     * @param uuid
+     * @return
+     */
     @GetMapping("/getOrder")
     public String getOrder(String uuid) {
+        long startTime = System.currentTimeMillis();
         OrderRpc order = orderService.getOrder(uuid);
-
-        Future<OrderRpc> orderFuture = RpcContext.getContext().getFuture();
-        try {
-            OrderRpc orderRpc = orderFuture.get();
-            if (order == null) {
-                order = orderRpc;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
+        OrderRpc order1 = orderService.getOrder(uuid);
         ObjectMapper objectMapper = new ObjectMapper();
         String orderJson = null;
         try {
@@ -46,7 +42,46 @@ public class TestOrderService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("time consuming : " + (endTime - startTime) + "ms");
 //        JsonNode node = objectMapper.readTree(orderJson);
         return orderJson;
     }
+    /**
+     * 异步调用、异步返回
+     */
+//    @GetMapping("/getOrder")
+//    public String getOrder(String uuid) {
+//        long startTime = System.currentTimeMillis();
+//
+//        OrderRpc order = orderService.getOrder(uuid);
+//        OrderRpc order1 = orderService.getOrder(uuid);
+//
+//        Future<OrderRpc> orderFuture = RpcContext.getContext().getFuture();
+//        Future<OrderRpc> orderFuture1 = RpcContext.getContext().getFuture();
+//        try {
+//            OrderRpc orderRpc = orderFuture.get();
+//            OrderRpc orderRpc1 = orderFuture1.get();
+//            if (order == null) {
+//                order = orderRpc;
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String orderJson = null;
+//        try {
+//            orderJson = objectMapper.writeValueAsString(order);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+//        long endTime = System.currentTimeMillis();
+//        System.out.println("time consuming : " + (endTime - startTime) + "ms");
+////        JsonNode node = objectMapper.readTree(orderJson);
+//        return orderJson;
+//    }
 }
