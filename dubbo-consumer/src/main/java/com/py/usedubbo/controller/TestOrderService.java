@@ -19,7 +19,11 @@ import java.util.concurrent.Future;
 @RestController
 public class TestOrderService {
 
-//    @Reference(async = true, timeout = 3000)
+//    @Reference(
+//            async = true,
+//            timeout = 3000,
+//            parameters = {"getOrder.timeout", "3000", "getOrder2.timeout", "5000", "getOrder.onreturn", "myCallback.callback"}
+//    )
 //    private OrderService orderService;
 
     @Reference(timeout = 5000)
@@ -27,6 +31,7 @@ public class TestOrderService {
 
     /**
      * 同步调用、同步返回
+     *
      * @param uuid
      * @return
      */
