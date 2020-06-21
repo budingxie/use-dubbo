@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @author 彭有
  * @date 2020/6/13
  */
-@Service
+@Service(async = true, timeout = 3000)
 @Component
 public class OrderServiceImpl implements OrderService {
 
